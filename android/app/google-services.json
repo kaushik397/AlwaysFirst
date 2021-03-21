@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "2149304619",
+    "firebase_url": "https://alwaysfirst-5c752.firebaseio.com",
+    "project_id": "alwaysfirst-5c752",
+    "storage_bucket": "alwaysfirst-5c752.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:2149304619:android:f1e2b62e35e83884409d6e",
+        "android_client_info": {
+          "package_name": "com.example.AlwaysFirst"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "2149304619-vklaiacikvbcac9vuupfoh7lejbolgkr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkg3M-ji8N4-YSX3iWy5lgzi9kqG43EMc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "2149304619-vklaiacikvbcac9vuupfoh7lejbolgkr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
