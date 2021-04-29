@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'Functions/home.dart';
 import 'package:splashscreen/splashscreen.dart';
 
+//import 'package:flare_splash_screen/flare_splash_screen.dart';
 void main() {
   runApp(MyApp());
 }

@@ -1,6 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flare_flutter/flare_actor.dart';
+import 'package:flutter/rendering.dart';
+import 'dart:async';
+import 'dart:math';
+import 'dart:ui';
+import 'package:flare_flutter/flare.dart';
+import 'package:flare_flutter/flare_controls.dart';
 
 class Requiester extends StatefulWidget {
   Requiester({this.app});
@@ -10,16 +17,17 @@ class Requiester extends StatefulWidget {
 }
 
 class _RequiesterState extends State<Requiester> {
-  final movienom = "What You wish to watch Here";
-  final refrenceDatabase = FirebaseDatabase.instance;
+  final movienom = " ";
+  final refrenceDatabase = FirebaseDatabase.instance.reference();
   final movieController = TextEditingController();
   final typeController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final ref = refrenceDatabase.reference();
+    // String req = '';
+    final ref = FirebaseDatabase.instance.reference();
     return Scaffold(
       appBar: AppBar(
-        title: Text("Wish's"),
+        title: Text("Wish List!"),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -28,65 +36,78 @@ class _RequiesterState extends State<Requiester> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(
-                movienom,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.white),
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  height: 200,
+                  padding: const EdgeInsets.only(left: 30.0, right: 30.0),
+                  child: FlareActor(
+                    "asserts/Teddy.flr",
+                    shouldClip: false,
+                    alignment: Alignment.bottomCenter,
+                    fit: BoxFit.contain,
+                  ),
+                ),
               ),
-              SizedBox(
-                height: 40,
-              ),
-              TextField(
-                controller: movieController,
-                decoration: InputDecoration(
-                    hintText: "Name",
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                        borderSide: BorderSide(color: Colors.grey))),
+              Container(
+                height: 280,
+                width: 800,
+                decoration: BoxDecoration(
+                    color: Colors.blueGrey,
+                    borderRadius: BorderRadius.all(Radius.circular(25.0))),
+                child: Center(
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: 40,
+                      ),
+                      TextField(
+                        controller: movieController,
+                        decoration: InputDecoration(
+                            hintText: "Name",
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                                borderSide: BorderSide(color: Colors.grey))),
+                      ),
+                      SizedBox(
+                        height: 55,
+                      ),
+                      // ignore: deprecated_member_use
+                      TextField(
+                        controller: typeController,
+                        decoration: InputDecoration(
+                            hintText: "Type (optional)",
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                                borderSide: BorderSide(color: Colors.grey))),
+                      ),
+                    ],
+                  ),
+                ),
               ),
               SizedBox(
                 height: 25,
               ),
-              FlatButton(
-                onPressed: () {
-                  ref
-                      .push()
-                      .child('Name_it')
-                      .set(movieController.text)
-                      .asStream();
-                  movieController.clear();
-                },
-                child: Text('Submit Name'),
-                color: Colors.blue,
-              ),
-              SizedBox(
-                height: 40,
-              ),
-              TextField(
-                controller: typeController,
-                decoration: InputDecoration(
-                    hintText: "Type",
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                        borderSide: BorderSide(color: Colors.grey))),
-              ),
-              SizedBox(
-                height: 25,
-              ),
-              FlatButton(
-                onPressed: () {
-                  ref
-                      .push()
-                      .child('Type_it')
-                      .set(typeController.text)
-                      .asStream();
-                  typeController.clear();
-                },
-                child: Text('Submit type'),
-                color: Colors.blue,
+              // ignore: deprecated_member_use
+              Center(
+                // ignore: deprecated_member_use
+                child: FlatButton(
+                  onPressed: () {
+                    ref.push().set({
+                      'Type_it': typeController.text,
+                      "name": movieController.text
+                    }).asStream();
+                    typeController.clear();
+                    movieController.clear();
+                  },
+                  child: Text('Submit type'),
+                  color: Colors.blue,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
               ),
               SizedBox(
                 height: 30,

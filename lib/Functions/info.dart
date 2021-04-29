@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 
-class InfoPage extends StatelessWidget {
+class InfoPage extends StatefulWidget {
+  @override
+  _InfoPageState createState() => _InfoPageState();
+}
+
+class _InfoPageState extends State<InfoPage> {
   final FlutterTts flutterTts = FlutterTts();
+
   @override
   Widget build(BuildContext context) {
     Future _speak() async {
@@ -14,6 +20,13 @@ class InfoPage extends StatelessWidget {
 
       await flutterTts.speak(
           "We at alwaysFirst Don't take any information from user , but for our service we use hosting platforms and google admob for other ads you see, Entire app is made using flutter frame work ,they are updated mostly manually and they don't contain any virus and it is recommended to clear cache from app manager.");
+    }
+
+    @override
+    void dispose() {
+      flutterTts.stop();
+      super.dispose();
+      // widget.aud.setVolume(upvol);
     }
 
     return Scaffold(
