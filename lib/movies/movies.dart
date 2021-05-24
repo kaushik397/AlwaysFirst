@@ -1,11 +1,13 @@
-import 'dart:io';
-import 'package:badges/badges.dart';
+//import 'package:AlwaysFirst/Functions/loader.dart';
+//import 'dart:js';
+
 import 'package:AlwaysFirst/movies/player.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
-//import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
-import 'package:flutter/services.dart';
-import 'package:share/share.dart';
+import 'package:AlwaysFirst/movies/dataFormat.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:any_link_preview/any_link_preview.dart';
+//import 'package:path/path.dart';
 
 class MoviesPage extends StatefulWidget {
   @override
@@ -13,143 +15,313 @@ class MoviesPage extends StatefulWidget {
 }
 
 class _MoviesPageState extends State<MoviesPage> {
-  // SearchBar searchBar;
+  List<MovieData> allMovies = [];
+  @override
+  void initState() {
+    DatabaseReference ref = FirebaseDatabase.instance.reference();
+    ref.child('movies').once().then((DataSnapshot snap) {
+      var keys = snap.key;
+      var data = snap.value;
+      print("Data got is here");
+      print('');
+      print(data.length.runtimeType);
+      allMovies.clear();
+      for (int i = 0; i < data.length; i++) {
+        MovieData d = MovieData(data[i]['index'], data[i]['link'],
+            data[i]['name'], data[i]['type']);
+        print('getting data!!!');
+        allMovies.add(d);
+      }
+      print(allMovies[0].link);
+      // print(data);
+      setState(() {
+        print('Length:${allMovies.length}');
+      });
+    });
+    super.initState();
+  }
+
+//allMovies[index].name,
   @override
   Widget build(BuildContext context) {
+    print('the recived adda:${allMovies.length}');
     return Scaffold(
-        appBar: AppBar(
-          title: Text("movies"),
-          centerTitle: true,
-          backgroundColor: Colors.blueAccent[100],
-        ),
-        body: Center(
-          child: FutureBuilder(
-            builder: (contenxt, snapshot) {
-              var showData = json.decode(snapshot.data.toString());
-              print(showData.runtimeType);
-              return ListView.builder(
-                itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
-                    selected: true,
-                    // leading: ImageBuilder(showData[index]['link']),
-                    title: Text(
-                      showData[index]['name'],
-                      style:
-                          TextStyle(fontSize: 19, fontWeight: FontWeight.w100),
+      appBar: AppBar(
+        title: Text("movies"),
+        centerTitle: true,
+        backgroundColor: Colors.blueAccent[100],
+      ),
+      body: Container(
+          child: allMovies.length == 0
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(
+                      height: 200,
                     ),
-                    subtitle: Text(
-                      'Type: ' + showData[index]['type'],
-                      style:
-                          TextStyle(fontSize: 14, fontWeight: FontWeight.w300),
+                    Center(
+                      child: Container(
+                        height: 150,
+                        width: 150,
+                        decoration: BoxDecoration(
+                            color: Colors.blueGrey,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(25.0))),
+                        child: Center(
+                          child: SpinKitPumpingHeart(
+                            color: Colors.greenAccent,
+                          ),
+                        ),
+                      ),
                     ),
-                    onLongPress: () {
-                      showModalBottomSheet(
-                          context: context,
-                          builder: (BuildContext bc) {
-                            return Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(25),
-                                      topRight: Radius.circular(25)),
-                                  color: Colors.white),
-
-                              height: 200,
-                              //color: Colors.white,
-                              child: ListView(
-                                padding: EdgeInsets.all(5),
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      showData[index]['name'],
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.black),
-                                    ),
-                                  ),
-                                  ListTile(
-                                    leading: Icon(
-                                      Icons.share,
-                                      color: Colors.black,
-                                    ),
-                                    title: Text('Share',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                        )),
-                                    //tileColor: Colors.lightGreenAccent[200],
-                                    onTap: () {
-                                      Share.share(showData[index]['link']);
-                                    },
-                                  ),
-                                  ListTile(
-                                    leading: Icon(
-                                      Icons.play_arrow,
-                                      color: Colors.black,
-                                    ),
-                                    title: Text('Watch Now',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                        )),
-                                    //tileColor: Colors.pinkAccent[100],
-                                    onTap: () {
-                                      SystemChrome.setPreferredOrientations(
-                                          [DeviceOrientation.landscapeLeft]);
-                                      debugPrint("hi-men");
-                                      // print('the debug' + showData['name']);
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => MoviePlayer(
-                                              showData,
-                                              index,
-                                            ),
-                                          ));
-                                    },
-                                  ),
-                                ],
-                              ),
-                            );
-                          });
-                      //Share.share(showData[index]['link']);
-                    },
-                    onTap: () {
-                      SystemChrome.setPreferredOrientations(
-                          [DeviceOrientation.landscapeLeft]);
-                      debugPrint("hi-men");
-                      // print('the debug' + showData['name']);
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MoviePlayer(
-                              showData,
-                              index,
-                            ),
-                          ));
-                    },
-                  );
-                },
-                itemCount: showData.length,
-              );
-            },
-            future: DefaultAssetBundle.of(context)
-                .loadString("asserts/AlwaysFirst.json"),
-          ),
-        ));
+                  ],
+                )
+              : ListView.builder(
+                  //scrollDirection: Axis.vertical,
+                  itemBuilder: (_, index) {
+                    return SingleChildScrollView(
+                        child: Pusher(
+                            allMovies[index].index,
+                            allMovies[index].name,
+                            allMovies[index].link,
+                            allMovies[index].type));
+                  },
+                  itemCount: allMovies.length,
+                )),
+    );
   }
 }
 
+class Pusher extends StatefulWidget {
+  final String name;
+  final String link;
+  final String type;
+  final String index;
+  Pusher(
+    this.index,
+    this.name,
+    this.link,
+    this.type,
+  );
+  @override
+  _PusherState createState() => _PusherState();
+}
+
+class _PusherState extends State<Pusher> {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 5.0),
+      child: Card(
+        elevation: 3.0,
+        shadowColor: Colors.black,
+        child: ListTile(
+          dense: true,
+          //selected: true,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+          leading: Container(
+            height: 40,
+            width: 40,
+            decoration: BoxDecoration(
+                color: Colors.yellowAccent,
+                borderRadius: BorderRadius.all(Radius.circular(5.0))),
+            child: AnyLinkPreview(
+              link: widget.link,
+              displayDirection: UIDirection.UIDirectionHorizontal,
+              showMultimedia: false,
+              cache: Duration(days: 7),
+              backgroundColor: Colors.blueGrey[300],
+              borderRadius: 2,
+              removeElevation: false,
+              boxShadow: [BoxShadow(blurRadius: 3, color: Colors.grey)],
+              errorImage:
+                  'https://www.pngkey.com/png/full/418-4187482_gray-color-full-screen.png',
+            ),
+          ),
+          tileColor: Colors.blueGrey,
+          selectedTileColor: Colors.blueGrey[100],
+          title: Text(widget.name),
+          subtitle: Text(widget.type),
+          onTap: () {
+            print(widget.link);
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      MoviePlayer(widget.link, int.parse(widget.index)),
+                ));
+          },
+        ),
+      ),
+    );
+  }
+}
+
+/*leading: AnyLinkPreview(
+          link: link,
+          displayDirection: UIDirection.UIDirectionHorizontal,
+          showMultimedia: false,
+          cache: Duration(days: 7),
+          backgroundColor: Colors.blueGrey[300],
+          borderRadius: 2,
+          removeElevation: false,
+          boxShadow: [BoxShadow(blurRadius: 3, color: Colors.grey)],
+          errorImage:
+              'https://www.pngkey.com/png/full/418-4187482_gray-color-full-screen.png',
+        ),
+        Column(
+      children: [
+        Container(
+          height: 140,
+          width: 100,
+          // color: Colors.blueAccent,
+          decoration: BoxDecoration(
+              color: Colors.blueGrey,
+              borderRadius: BorderRadius.all(Radius.circular(15.0))),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  height: 20,
+                  width: 20,
+                  child: AnyLinkPreview(
+                    link: widget.link,
+                    displayDirection: UIDirection.UIDirectionHorizontal,
+                    showMultimedia: false,
+                    cache: Duration(days: 7),
+                    backgroundColor: Colors.blueGrey[300],
+                    borderRadius: 2,
+                    removeElevation: false,
+                    boxShadow: [BoxShadow(blurRadius: 3, color: Colors.grey)],
+                    errorImage:
+                        'https://www.pngkey.com/png/full/418-4187482_gray-color-full-screen.png',
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 5,
+              ),
+              Text(
+                widget.name,
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  print(widget.link);
+                },
+              ),
+              SizedBox(
+                height: 5,
+              )
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        )
+      ],
+    );
+        
+        */
+/* SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(
+                height: 10,
+              ),
+              SizedBox(
+                  //height: 30,
+                  //width: 400,
+                  child: allMovies.length == 0
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            SizedBox(
+                              height: 200,
+                            ),
+                            Center(
+                              child: Container(
+                                height: 150,
+                                width: 150,
+                                decoration: BoxDecoration(
+                                    color: Colors.blueGrey,
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(25.0))),
+                                child: Center(
+                                  child: SpinKitPumpingHeart(
+                                    color: Colors.greenAccent,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      : ListView.builder(
+                          //scrollDirection: Axis.vertical,
+                          itemBuilder: (_, index) {
+                            return MovieLT(
+                                allMovies[index].index,
+                                allMovies[index].name,
+                                allMovies[index].link,
+                                allMovies[index].type);
+                          },
+                          itemCount: allMovies.length,
+                        )),
+            ],
+          ),
+        ),
+      ),*/
+
 // ignore: non_constant_identifier_names
-/*ImageBuilder(String link) {
-  return FlutterLinkPreview(
-    url: link,
-    //key: ValueKey(''),
-    builder: (link) {
-      if (link == null) return const SizedBox();
-      if (link is WebImageInfo) {
-        return CachedNetworkImage();
-      }
-    },
+/*Widget MovieLT(String index, String name, String link, String type) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 5.0),
+    child: Card(
+      elevation: 1.0,
+      shadowColor: Colors.grey,
+      child: ListTile(
+        dense: true,
+        //selected: true,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+        leading: Container(
+          height: 40,
+          width: 40,
+          decoration: BoxDecoration(
+              color: Colors.yellowAccent,
+              borderRadius: BorderRadius.all(Radius.circular(3.0))),
+          child: AnyLinkPreview(
+            link: link,
+            displayDirection: UIDirection.UIDirectionHorizontal,
+            showMultimedia: false,
+            cache: Duration(days: 7),
+            backgroundColor: Colors.blueGrey[300],
+            borderRadius: 2,
+            removeElevation: false,
+            boxShadow: [BoxShadow(blurRadius: 3, color: Colors.grey)],
+            errorImage:
+                'https://www.pngkey.com/png/full/418-4187482_gray-color-full-screen.png',
+          ),
+        ),
+        tileColor: Colors.blueGrey,
+        selectedTileColor: Colors.blueGrey[100],
+        title: Text(name),
+        subtitle: Text(type),
+        onTap: () {},
+      ),
+    ),
   );
 }
 */

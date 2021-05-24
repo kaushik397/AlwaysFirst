@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
-
 class QRViewExample extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _QRViewExampleState();
@@ -37,50 +36,17 @@ class _QRViewExampleState extends State<QRViewExample> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
+                  SizedBox(
+                    height: 10,
+                  ),
                   if (result != null)
                     Text(
-                        'Barcode Type: ${describeEnum(result.format)}   Data: ${result.code}')
+                      'You Order: ${result.code}',
+                      style:
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+                    )
                   else
                     Text('Scan a code'),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.all(8),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              await controller?.toggleFlash();
-                              setState(() {});
-                            },
-                            child: FutureBuilder(
-                              future: controller?.getFlashStatus(),
-                              builder: (context, snapshot) {
-                                return Text('Flash: ${snapshot.data}');
-                              },
-                            )),
-                      ),
-                      Container(
-                        margin: EdgeInsets.all(8),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              await controller?.flipCamera();
-                              setState(() {});
-                            },
-                            child: FutureBuilder(
-                              future: controller?.getCameraInfo(),
-                              builder: (context, snapshot) {
-                                if (snapshot.data != null) {
-                                  return Text(
-                                      'Camera facing ${describeEnum(snapshot.data)}');
-                                } else {
-                                  return Text('loading');
-                                }
-                              },
-                            )),
-                      )
-                    ],
-                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,

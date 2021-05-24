@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:AlwaysFirst/Functions/Required_movie.dart';
 import 'package:AlwaysFirst/Functions/info.dart';
 import 'package:AlwaysFirst/Functions/internet_speed.dart';
@@ -15,6 +17,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int r;
+  List<Color> colors = [
+    Colors.blueAccent[200],
+    Colors.greenAccent[200],
+    Colors.pinkAccent[100],
+    Colors.redAccent[100],
+    Colors.pinkAccent[100],
+    Colors.purpleAccent[100],
+    // Colors.deepPurpleAccent[100],
+    //Colors.indigoAccent[100],
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -211,15 +224,21 @@ class _HomePageState extends State<HomePage> {
                   // ignore: deprecated_member_use
                   child: RaisedButton(
                     onPressed: () {
+                      Random rnd;
+                      int min = 0;
+                      int max = colors.length - 1;
+                      rnd = new Random();
+                      r = min + rnd.nextInt(max - min);
                       showModalBottomSheet(
                           context: context,
                           builder: (BuildContext bc) {
                             return Container(
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(25),
-                                      topRight: Radius.circular(25)),
-                                  color: Colors.white),
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(25),
+                                    topRight: Radius.circular(25)),
+                                color: colors[r],
+                              ),
                               height: 150,
                               child: Center(
                                 child: Text(
