@@ -50,19 +50,19 @@ class _RequiesterState extends State<Requiester> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: Container(
+              Center(
+                child: SizedBox(
                   height: 200,
-                  padding: const EdgeInsets.only(left: 30.0, right: 30.0),
-                  child: FlareActor(
-                    "asserts/Teddy.flr",
-                    //controller: _TeddyController,
-                    shouldClip: false,
-                    alignment: Alignment.bottomCenter,
-                    fit: BoxFit.contain,
+                  width: 400,
+                  child: Container(
+                    height: 200,
+                    padding: const EdgeInsets.only(left: 30.0, right: 30.0),
+                    child: FlareActor("asserts/Teddy.flr",
+                        //controller: _TeddyController,
+                        shouldClip: false,
+                        alignment: Alignment.bottomCenter,
+                        fit: BoxFit.contain,
+                        animation: "idle"),
                   ),
                 ),
               ),

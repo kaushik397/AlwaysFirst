@@ -145,6 +145,7 @@ class _PusherState extends State<Pusher> {
           title: Text(widget.name),
           subtitle: Text(widget.type),
           onTap: () {
+            print(widget.name);
             print(widget.link);
             Navigator.push(
                 context,
