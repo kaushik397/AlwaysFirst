@@ -1,6 +1,7 @@
 //import 'package:AlwaysFirst/Functions/loader.dart';
 //import 'dart:js';
-
+import 'package:flutter/services.dart';
+import 'package:omdb_dart/omdb_dart.dart';
 import 'package:AlwaysFirst/movies/player.dart';
 import 'package:flutter/material.dart';
 import 'package:AlwaysFirst/movies/dataFormat.dart';
@@ -109,8 +110,26 @@ class Pusher extends StatefulWidget {
 }
 
 class _PusherState extends State<Pusher> {
+  String name1 = '';
+  String imageurl = '';
+  @override
+  // ignore: must_call_super
+  void initState() {
+    name1 = widget.name;
+    getMovie();
+  }
+
+  Future<void> getMovie() async {
+    Omdb client = new Omdb("df145388", name1);
+    await client.getMovie();
+    //print("Movie nameis:${widget.name},movie image:${client.movie.poster}");
+    imageurl = client.movie.poster;
+    print("Url is $imageurl");
+  }
+
   @override
   Widget build(BuildContext context) {
+    // print(client.movie.poster);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 5.0),
       child: Card(
@@ -121,30 +140,38 @@ class _PusherState extends State<Pusher> {
           //selected: true,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
-          leading: Container(
+          leading: // FadeInImage.assetNetwork(
+              //   placeholder: 'asserts/gray.png',
+              //   image: imageurl,
+              //   height: 25,
+              //   width: 25,
+              // ), //Image.network(client.movie.poster),
+              Container(
             height: 40,
             width: 40,
             decoration: BoxDecoration(
                 color: Colors.yellowAccent,
                 borderRadius: BorderRadius.all(Radius.circular(5.0))),
             child: AnyLinkPreview(
-              link: widget.link,
-              displayDirection: UIDirection.UIDirectionHorizontal,
-              showMultimedia: false,
-              cache: Duration(days: 7),
-              backgroundColor: Colors.blueGrey[300],
-              borderRadius: 2,
-              removeElevation: false,
-              boxShadow: [BoxShadow(blurRadius: 3, color: Colors.grey)],
-              errorImage:
-                  'https://www.pngkey.com/png/full/418-4187482_gray-color-full-screen.png',
-            ),
+                link: imageurl,
+                displayDirection: UIDirection.UIDirectionHorizontal,
+                showMultimedia: false,
+                cache: Duration(days: 7),
+                backgroundColor: Colors.blueGrey[300],
+                borderRadius: 2,
+                removeElevation: false,
+                boxShadow: [BoxShadow(blurRadius: 3, color: Colors.grey)],
+                errorImage: widget.link
+                //'https://www.pngkey.com/png/full/418-4187482_gray-color-full-screen.png',
+                ),
           ),
           tileColor: Colors.blueGrey,
           selectedTileColor: Colors.blueGrey[100],
           title: Text(widget.name),
           subtitle: Text(widget.type),
           onTap: () {
+            SystemChrome.setPreferredOrientations(
+                [DeviceOrientation.landscapeLeft]);
             print(widget.name);
             print(widget.link);
             Navigator.push(

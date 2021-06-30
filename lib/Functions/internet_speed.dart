@@ -35,6 +35,14 @@ class _interSpeedState extends State<interSpeed> {
                 Text('Download rate  $downloadRate $unitText'),
               ],
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Text('Progress $uploadProgress%'),
+                Text('Upload rate  $uploadRate Kb/s'),
+              ],
+            ),
+            // ignore: deprecated_member_use
             RaisedButton(
               child: Text('start testing'),
               onPressed: () {
@@ -65,18 +73,6 @@ class _interSpeedState extends State<interSpeed> {
                       'https://idgtechmedia.speedtestcustom.com/result/77cb22c0-1451-11eb-bf67-7d25ceff81f6R',
                   fileSize: 20000000,
                 );
-              },
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                Text('Progress $uploadProgress%'),
-                Text('Upload rate  $uploadRate Kb/s'),
-              ],
-            ),
-            RaisedButton(
-              child: Text('start testing'),
-              onPressed: () {
                 internetSpeedTest.startUploadTesting(
                   onDone: (double transferRate, SpeedUnit unit) {
                     print('the transfer rate $transferRate');

@@ -4,7 +4,7 @@ import 'package:AlwaysFirst/Functions/Required_movie.dart';
 import 'package:AlwaysFirst/Functions/info.dart';
 import 'package:AlwaysFirst/Functions/internet_speed.dart';
 import 'package:AlwaysFirst/Functions/qr_scanner.dart';
-import 'package:AlwaysFirst/Functions/team.dart';
+//import 'package:AlwaysFirst/Functions/team.dart';
 import 'package:flutter/material.dart';
 import 'package:AlwaysFirst/movies/movies.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
@@ -17,17 +17,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int r;
-  List<Color> colors = [
-    Colors.blueAccent[200],
-    Colors.greenAccent[200],
-    Colors.pinkAccent[100],
-    Colors.redAccent[100],
-    Colors.pinkAccent[100],
-    Colors.purpleAccent[100],
-    // Colors.deepPurpleAccent[100],
-    //Colors.indigoAccent[100],
-  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,27 +63,7 @@ class _HomePageState extends State<HomePage> {
                         },
                       ),
                       //todo
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ListTile(
-                          selectedTileColor: Colors.white,
-                          // true,
-                          leading: Icon(Icons.group),
-                          title: Text(
-                            'Team',
-                            style: TextStyle(fontSize: 18),
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => TeamPage(),
-                                ));
-                            // Update the state of the app.
-                            // ...
-                          },
-                        ),
-                      ),
+
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ListTile(
@@ -224,11 +193,6 @@ class _HomePageState extends State<HomePage> {
                   // ignore: deprecated_member_use
                   child: RaisedButton(
                     onPressed: () {
-                      Random rnd;
-                      int min = 0;
-                      int max = colors.length - 1;
-                      rnd = new Random();
-                      r = min + rnd.nextInt(max - min);
                       showModalBottomSheet(
                           context: context,
                           builder: (BuildContext bc) {
@@ -237,7 +201,7 @@ class _HomePageState extends State<HomePage> {
                                 borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(25),
                                     topRight: Radius.circular(25)),
-                                color: colors[r],
+                                color: rtcolour(),
                               ),
                               height: 150,
                               child: Center(
@@ -263,4 +227,25 @@ class _HomePageState extends State<HomePage> {
           ),
         ));
   }
+}
+
+rtcolour() {
+  int r;
+  List<Color> colors = [
+    Colors.blueAccent[200],
+    Colors.greenAccent[200],
+    Colors.pinkAccent[100],
+    Colors.redAccent[100],
+    Colors.pinkAccent[100],
+    Colors.purpleAccent[100],
+    // Colors.deepPurpleAccent[100],
+    //Colors.indigoAccent[100],
+  ];
+  Random rnd;
+  int min = 0;
+  int max = colors.length - 1;
+  rnd = new Random();
+  r = min + rnd.nextInt(max - min);
+
+  return colors[r];
 }

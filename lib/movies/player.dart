@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 //import 'package:AlwaysFirst/movies/movies.dart';
 //import 'package:flutter/services.dart';
 import 'package:flutter/services.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+//import 'package:webview_flutter/webview_flutter.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 
 // ignore: must_be_immutable
 class MoviePlayer extends StatefulWidget {
@@ -28,9 +29,14 @@ class _MoviePlayerState extends State<MoviePlayer> {
 
   @override
   Widget build(BuildContext context) {
-    return WebView(
-      initialUrl: widget.link,
-      
-    );
+    return WebviewScaffold(
+        url: widget.link,
+        withLocalStorage: true,
+        initialChild: Container(
+          color: Colors.redAccent,
+          child: const Center(
+            child: Text('Waiting.....'),
+          ),
+        ));
   }
 }
